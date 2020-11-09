@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ExpressionEvaluatorError: Swift.Error, CustomStringConvertible {
+public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
 
 	/// `pop()` was called on an empty stack.
 	case zeroDepthPop
@@ -247,6 +247,7 @@ public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 
 private extension ExpressionEvaluator {
 
+	/// An ExpressionEvaluator function.
 	enum Function {
 
 		case arityZero(() -> T)
