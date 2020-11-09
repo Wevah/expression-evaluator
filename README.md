@@ -1,3 +1,3 @@
 # ExpressionEvaluator
 
-A description of this package.
+A simple mathematical expression evaluator.
