@@ -40,17 +40,28 @@ public protocol ExpressionEvaluable: BinaryFloatingPoint where Self: LosslessStr
 	/// `x` raised to the power `y`.
 	static func pow(_ x: Self, _ y: Self) -> Self
 
+	/// The square root of `x`.
+	static func sqrt(_ x: Self) -> Self
+
 	/// The cube root of `x`.
 	static func cbrt(_ x: Self) -> Self
 
 }
 
-extension ExpressionEvaluable {
+public extension ExpressionEvaluable {
 
 	/// The mathematical constant e.
 	@_transparent
 	static var e: Self {
 		return 2.71828182845904523536
+	}
+
+}
+
+public extension ExpressionEvaluable {
+
+	static func sqrt(_ x: Self) -> Self {
+		return x.squareRoot()
 	}
 
 }

@@ -308,7 +308,7 @@ private extension ExpressionEvaluator {
 			"atan2": Function { .atan2($0, $1) },
 
 			"pow": Function { .pow($0, $1) },
-			"sqrt": Function { sqrt($0) },
+			"sqrt": Function { .sqrt($0) },
 			"cbrt": Function { .cbrt($0) }
 		]
 	}
