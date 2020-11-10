@@ -5,6 +5,10 @@
 //  Created by Nate Weaver on 2020-09-18.
 //
 
+//  Originally adapted for Obejctive-C from a file named "eval4.cpp" in 2005,
+//  whose source I can't seem to track down (it has no copyright information in the source).
+//  If anyone has any pointers, I'd be grateful!
+
 import Foundation
 
 public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
@@ -51,6 +55,7 @@ public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
 
 }
 
+/// An expression evaluator.
 public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 
 	private enum TokenType {
@@ -501,8 +506,7 @@ private extension ExpressionEvaluator {
 	}
 }
 
-// Convenience functions for passing in integer variables.
-
+/// Convenience functions for passing in integer variables.
 public extension ExpressionEvaluator {
 
 	static func evaluate<I: FixedWidthInteger>(expression: String, variables: [String: I]) throws -> T {
