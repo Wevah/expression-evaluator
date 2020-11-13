@@ -1,8 +1,8 @@
 # ExpressionEvaluator
 
-A simple mathematical expression evaluator. Generic on `ExpressionEvaluable`, with conformances for `Double`, `Float`, `Float80`, and `CGFloat`.
+A simple mathematical expression evaluator for user input. Generic on `ExpressionEvaluable`, with conformances for `Double`, `Float`, `Float80`, and `CGFloat`.
 
-(This is not meant to be a high-performance library.)
+(Note: This is not meant to be a high-performance library.)
 
 ## Examples
 
@@ -43,18 +43,26 @@ let result = ExpressionEvaluator.evaluate(expressions: expressions, variables: v
 
 ## Built-in functions
 
-Implemented as static functions on `ExpressionEvaluable` types:
+Implemented under the hood as static functions on `ExpressionEvaluable` types:
 
-- `sin`
-- `cos`
-- `tan`
-- `asin`
-- `acos`
-- `atan`
-- `atan2`
-- `pow`
-- `cbrt` (cube root)
-- `sqrt`
+- `sin(x)`
+- `cos(x)`
+- `tan(x)`
+- `asin(x)`
+- `acos(x)`
+- `atan(x)`
+- `atan2(y, x)`
+- `pow(x, y)`
+- `sqrt(x)`
+- `cbrt(x)` Cube root
+- `rand()` A random number in the range `0..<1`
+
+Example:
+
+```swift
+let result = ExpressionEvaluator.evaluate(expression: "sqrt(4)")
+// `result` is 2
+```
 
 ## Constants
 
