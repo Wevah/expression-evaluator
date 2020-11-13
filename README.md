@@ -41,7 +41,7 @@ let result = try ExpressionEvaluator.evaluate(expressions: expressions, variable
 // `result` is ["add": 5.0, "mult": 6.0]
 ```
 
-## Built-in functions
+## Supported Functions
 
 Implemented under the hood as static functions on `ExpressionEvaluable` types:
 
