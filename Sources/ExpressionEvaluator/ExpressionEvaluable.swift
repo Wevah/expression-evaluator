@@ -18,7 +18,7 @@ public protocol ExpressionEvaluable: BinaryFloatingPoint where Self: LosslessStr
 	/// The sine of `x`.
 	static func sin(_ x: Self) -> Self
 
-	/// The cosine of `x.
+	/// The cosine of `x`.
 	static func cos(_ x: Self) -> Self
 
 	/// The tangent of `x`.
