@@ -77,8 +77,8 @@ public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 	private var token: String = ""
 	private var tokenType: TokenType = .unknown
 
-	private lazy var constants = defaultConstants
-	private lazy var functions = defaultFunctions
+	private lazy var constants = Self.defaultConstants
+	private lazy var functions = Self.defaultFunctions
 
 	/// Initializes an expression evaluator.
 	///
@@ -315,28 +315,31 @@ private extension ExpressionEvaluator {
 
 	}
 
-	var defaultFunctions: [String: Function] {
+	static var defaultFunctions: [String: Function] {
 		return [
 			"rand": Function { .random(in: 0..<1) },
-			"abs": Function { abs($0) },
+			"abs": Function(abs),
 
-			"sin": Function { .sin($0) },
-			"cos": Function { .cos($0) },
-			"tan": Function { .tan($0) },
+			"sin": Function(T.sin),
+			"cos": Function(T.cos),
+			"tan": Function(T.tan),
 
-			"asin": Function { .asin($0) },
-			"acos": Function { .acos($0) },
-			"atan": Function { .atan($0) },
+			"asin": Function(T.asin),
+			"acos": Function(T.acos),
+			"atan": Function(T.atan),
 
-			"atan2": Function { .atan2($0, $1) },
+			"atan2": Function(T.atan2),
 
-			"pow": Function { .pow($0, $1) },
-			"sqrt": Function { .sqrt($0) },
-			"cbrt": Function { .cbrt($0) }
+			"pow": Function(T.pow),
+			"sqrt": Function(T.sqrt),
+			"cbrt": Function(T.cbrt),
+
+			"max": Function { $0.max() ?? 0 },
+			"min": Function { $0.min() ?? 0 }
 		]
 	}
 
-	var defaultConstants: [String: T] {
+	static var defaultConstants: [String: T] {
 		return [
 			"pi": .pi,
 			"e": .e,
