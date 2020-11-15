@@ -5,7 +5,7 @@
 //  Created by Nate Weaver on 2020-09-18.
 //
 
-//  Originally adapted for Obejctive-C from a file named "eval4.cpp" in 2005,
+//  Parsing logic originally adapted for Obejctive-C from a file named "eval4.cpp" in 2005,
 //  whose source I can't seem to track down (it has no copyright information in the source).
 //  If anyone has any pointers, I'd be grateful!
 
