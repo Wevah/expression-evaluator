@@ -77,8 +77,8 @@ public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 	private var token: String = ""
 	private var tokenType: TokenType = .unknown
 
-	private lazy var constants = Self.defaultConstants
-	private lazy var functions = Self.defaultFunctions
+	public private(set) lazy var constants = Self.defaultConstants
+	public private(set) lazy var functions = Self.defaultFunctions
 
 	/// Initializes an expression evaluator.
 	///
@@ -254,7 +254,7 @@ public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 
 }
 
-private extension ExpressionEvaluator {
+public extension ExpressionEvaluator {
 
 	/// An ExpressionEvaluator function.
 	enum Function {
@@ -277,19 +277,19 @@ private extension ExpressionEvaluator {
 			}
 		}
 
-		init(_ function: @escaping () -> T) {
+		public init(_ function: @escaping () -> T) {
 			self = .arityZero(function)
 		}
 
-		init(_ function: @escaping (_ x: T) -> T) {
+		public init(_ function: @escaping (_ x: T) -> T) {
 			self = .arityOne(function)
 		}
 
-		init(_ function: @escaping (_ x: T, _ y: T) -> T) {
+		public init(_ function: @escaping (_ x: T, _ y: T) -> T) {
 			self = .arityTwo(function)
 		}
 
-		init(_ function: @escaping (_ values: [T]) -> T) {
+		public init(_ function: @escaping (_ values: [T]) -> T) {
 			self = .arityAny(function)
 		}
 
@@ -313,6 +313,26 @@ private extension ExpressionEvaluator {
 			}
 		}
 
+	}
+
+	func addFunction(_ function: @escaping () -> T, withName name: String) {
+		functions[name] = Function(function)
+	}
+
+	func addFunction(_ function: @escaping (_ x: T) -> T, withName name: String) {
+		functions[name] = Function(function)
+	}
+
+	func addFunction(_ function: @escaping (_ x: T, _ y: T) -> T, withName name: String) {
+		functions[name] = Function(function)
+	}
+
+	func addFunction(_ function: @escaping (_ values: [T]) -> T, withName name: String) {
+		functions[name] = Function(function)
+	}
+
+	func removeFunction(named name: String) {
+		functions[name] = nil
 	}
 
 	static var defaultFunctions: [String: Function] {
@@ -347,6 +367,10 @@ private extension ExpressionEvaluator {
 			"rad": .pi / 180
 		]
 	}
+
+}
+
+private extension ExpressionEvaluator {
 
 	func push(_ value: T) {
 		stack.append(value)

@@ -119,5 +119,12 @@ final class ExpressionEvaluatorTests: XCTestCase {
 		XCTAssertEqual(try evaluator.evaluate(), 3)
 		XCTAssertEqual(try evaluator.evaluate(), 3)
 	}
+
+	func testCustomFunction() {
+		let evaluator = ExpressionEvaluator<Double>()
+		evaluator.addFunction({ $0 + 1 }, withName: "addone")
+
+		try XCTAssertEqual(evaluator.evaluate(expression: "addone(1)"), 2)
+	}
 	
 }
