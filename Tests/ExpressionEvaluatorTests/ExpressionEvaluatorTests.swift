@@ -13,11 +13,11 @@ final class ExpressionEvaluatorTests: XCTestCase {
 	func testExpressionEvaluator() {
 		let vars = ["x": 1.0, "y": 2.0, "z": 3.0]
 
-		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "x + y", variables: vars), 3.0)
+		try XCTAssertEqual(ExpressionEvaluator.evaluate(expression: "x + y", variables: vars), 3.0)
 
-		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "x + y * z", variables: vars), 7.0)
+		try XCTAssertEqual(ExpressionEvaluator.evaluate(expression: "x + y * z", variables: vars), 7.0)
 
-		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "(x + y) * z", variables: vars), 9.0)
+		try XCTAssertEqual(ExpressionEvaluator.evaluate(expression: "(x + y) * z", variables: vars), 9.0)
 	}
 
 	func testConstructed() throws {
@@ -29,9 +29,9 @@ final class ExpressionEvaluatorTests: XCTestCase {
 	}
 
 	func testExpressionFunctions() {
-		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "sqrt(4)"), 2)
-		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "max(1,3,2)"), 3)
-		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "abs(-1)"), 1)
+		try XCTAssertEqual(ExpressionEvaluator.evaluate(expression: "sqrt(4)"), 2)
+		try XCTAssertEqual(ExpressionEvaluator.evaluate(expression: "max(1,3,2)"), 3)
+		try XCTAssertEqual(ExpressionEvaluator.evaluate(expression: "abs(-1)"), 1)
 	}
 
 	func testRandom() {
@@ -89,11 +89,11 @@ final class ExpressionEvaluatorTests: XCTestCase {
 	}
 
 	func testEmptyExpression() throws {
-		XCTAssertEqual(try ExpressionEvaluator<Double>.evaluate(expression: ""), 0)
+		try XCTAssertEqual(ExpressionEvaluator<Double>.evaluate(expression: ""), 0)
 	}
 
 	func testSingleToken() throws {
-		XCTAssertEqual(try ExpressionEvaluator<Double>.evaluate(expression: "10"), 10)
+		try XCTAssertEqual(ExpressionEvaluator<Double>.evaluate(expression: "10"), 10)
 	}
 
 	func testUnexpectedToken() throws {
@@ -107,17 +107,17 @@ final class ExpressionEvaluatorTests: XCTestCase {
 	}
 
 	func testFunctions() throws {
-		XCTAssertEqual(try ExpressionEvaluator<Double>.evaluate(expression: "sqrt(4)"), 2)
-		XCTAssertEqual(try ExpressionEvaluator<Double>.evaluate(expression: "cbrt(27)"), 3)
+		try XCTAssertEqual(ExpressionEvaluator<Double>.evaluate(expression: "sqrt(4)"), 2)
+		try XCTAssertEqual(ExpressionEvaluator<Double>.evaluate(expression: "cbrt(27)"), 3)
 
-		XCTAssertEqual(try ExpressionEvaluator<Double>.evaluate(expression: "cbrt(8) + sqrt(16)"), 6)
+		try XCTAssertEqual(ExpressionEvaluator<Double>.evaluate(expression: "cbrt(8) + sqrt(16)"), 6)
 
 	}
 
 	func testRepeatedInvocations() throws {
 		let evaluator = ExpressionEvaluator<Double>(expression: "1 + 2")
-		XCTAssertEqual(try evaluator.evaluate(), 3)
-		XCTAssertEqual(try evaluator.evaluate(), 3)
+		try XCTAssertEqual(evaluator.evaluate(), 3)
+		try XCTAssertEqual(evaluator.evaluate(), 3)
 	}
 
 	func testCustomFunction() {
