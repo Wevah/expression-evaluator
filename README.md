@@ -56,6 +56,8 @@ Implemented under the hood as static functions on `ExpressionEvaluable` types:
 - `sqrt(x)`
 - `cbrt(x)` Cube root
 - `rand()` A random number in the range `0..<1`
+- `min(x, ...)`
+- `max(x, ...)`
 
 Example:
 
