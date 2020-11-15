@@ -18,7 +18,6 @@ final class ExpressionEvaluatorTests: XCTestCase {
 		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "x + y * z", variables: vars), 7.0)
 
 		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "(x + y) * z", variables: vars), 9.0)
-
 	}
 
 	func testConstructed() throws {
@@ -31,6 +30,8 @@ final class ExpressionEvaluatorTests: XCTestCase {
 
 	func testExpressionFunctions() {
 		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "sqrt(4)"), 2)
+		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "max(1,3,2)"), 3)
+		XCTAssertEqual(try ExpressionEvaluator.evaluate(expression: "abs(-1)"), 1)
 	}
 
 	func testRandom() {
