@@ -259,10 +259,11 @@ public extension ExpressionEvaluator {
 	/// An ExpressionEvaluator function.
 	enum Function {
 
-		case arityZero(() -> T)
-		case arityOne((_ x: T) -> T)
-		case arityTwo((_ x: T, _ y: T) -> T)
-		case arityAny((_ values: [T]) -> T)
+		case arityZero(() throws -> T)
+		case arityOne((_ x: T) throws -> T)
+		case arityTwo((_ x: T, _ y: T) throws -> T)
+		case arityThree((_ x: T, _ y: T, _ z: T) throws -> T)
+		case arityAny((_ values: [T]) throws -> T)
 
 		var numberOfArguments: Int? {
 			switch self {
@@ -272,36 +273,45 @@ public extension ExpressionEvaluator {
 					return 1
 				case .arityTwo:
 					return 2
+				case .arityThree:
+					return 3
 				case .arityAny:
 					return nil
 			}
 		}
 
-		public init(_ function: @escaping () -> T) {
+		public init(_ function: @escaping () throws -> T) {
 			self = .arityZero(function)
 		}
 
-		public init(_ function: @escaping (_ x: T) -> T) {
+		public init(_ function: @escaping (_ x: T) throws -> T) {
 			self = .arityOne(function)
 		}
 
-		public init(_ function: @escaping (_ x: T, _ y: T) -> T) {
+		public init(_ function: @escaping (_ x: T, _ y: T) throws -> T) {
 			self = .arityTwo(function)
 		}
 
-		public init(_ function: @escaping (_ values: [T]) -> T) {
+		public init(_ function: @escaping (_ x: T, _ y: T, _ z: T) throws -> T) {
+			self = .arityThree(function)
+		}
+
+		public init(_ function: @escaping (_ values: [T]) throws -> T) {
 			self = .arityAny(function)
 		}
 
-		func call(poppingWith pop: () throws -> T, count: Int) rethrows -> T {
+		func call(poppingWith pop: () throws -> T, count: Int) throws -> T {
 			switch self {
 				case let .arityZero(function):
-					return function()
+					return try function()
 				case let .arityOne(function):
 					return try function(pop())
 				case let .arityTwo(function):
 					let (y, x) = try (pop(), pop())
-					return function(x, y)
+					return try function(x, y)
+				case let .arityThree(function):
+					let (z, y, x) = try (pop(), pop(), pop())
+					return try function(x, y, z)
 				case let .arityAny(function):
 					var array = [T]()
 
@@ -309,25 +319,29 @@ public extension ExpressionEvaluator {
 						array.append(try pop())
 					}
 
-					return function(array)
+					return try function(array)
 			}
 		}
 
 	}
 
-	func addFunction(_ function: @escaping () -> T, withName name: String) {
+	func addFunction(_ function: @escaping () throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
-	func addFunction(_ function: @escaping (_ x: T) -> T, withName name: String) {
+	func addFunction(_ function: @escaping (_ x: T) throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
-	func addFunction(_ function: @escaping (_ x: T, _ y: T) -> T, withName name: String) {
+	func addFunction(_ function: @escaping (_ x: T, _ y: T) throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
-	func addFunction(_ function: @escaping (_ values: [T]) -> T, withName name: String) {
+	func addFunction(_ function: @escaping (_ x: T, _ y: T, _ z: T) throws -> T, withName name: String) {
+		functions[name] = Function(function)
+	}
+
+	func addFunction(_ function: @escaping (_ values: [T]) throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
