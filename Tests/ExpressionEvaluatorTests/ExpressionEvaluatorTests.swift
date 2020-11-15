@@ -132,6 +132,15 @@ final class ExpressionEvaluatorTests: XCTestCase {
 		try XCTAssertEqual(evaluator.evaluate(expression: "clamp(2, 1, 3)"), 2)
 		try XCTAssertEqual(evaluator.evaluate(expression: "clamp(-1, 1, 3)"), 1)
 		try XCTAssertEqual(evaluator.evaluate(expression: "clamp(4, 1, 3)"), 3)
+
+		do {
+			// Swapped arguments
+			try _ = evaluator.evaluate(expression: "clamp(2, 3, 1)")
+		} catch ExpressionEvaluatorError.invalidArgument {
+			// success
+		} catch {
+			XCTFail()
+		}
 	}
 
 }
