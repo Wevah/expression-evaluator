@@ -17,7 +17,7 @@ public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
 	case zeroDepthPop
 
 	/// A function was called with an incorrect argument count.
-	case incorrectArgumentCount(_ function: String)
+	case incorrectArgumentCount(function: String, expectedCount: Int?)
 
 	/// An identifier was not recognized.
 	case unknownIdentifier(_ identifier: String)
@@ -38,8 +38,12 @@ public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
 		switch self {
 			case .zeroDepthPop:
 				return "Pop called on zero-depth stack."
-			case let .incorrectArgumentCount(function):
-				return #"Incorrect number of arguments for function "\#(function)"."#
+			case let .incorrectArgumentCount(function, expectedCount):
+				if let expectedCount = expectedCount {
+					return #"Incorrect number of arguments for function "\#(function)"; expects exactly \#(expectedCount) arguments."#
+				} else {
+					return #"Incorrect number of arguments for function "\#(function)"; expects at least one argument."#
+				}
 			case let .unknownIdentifier(identifier):
 				return #"Unknown indentifier "\#(identifier)"."#
 			case let .unknownFunction(function):
@@ -258,8 +262,9 @@ private extension ExpressionEvaluator {
 		case arityZero(() -> T)
 		case arityOne((_ x: T) -> T)
 		case arityTwo((_ x: T, _ y: T) -> T)
+		case arityAny((_ values: [T]) -> T)
 
-		var numberOfArguments: Int {
+		var numberOfArguments: Int? {
 			switch self {
 				case .arityZero:
 					return 0
@@ -267,6 +272,8 @@ private extension ExpressionEvaluator {
 					return 1
 				case .arityTwo:
 					return 2
+				case .arityAny:
+					return nil
 			}
 		}
 
@@ -282,16 +289,27 @@ private extension ExpressionEvaluator {
 			self = .arityTwo(function)
 		}
 
-		func call(poppingWith pop: () throws -> T) rethrows -> T {
+		init(_ function: @escaping (_ values: [T]) -> T) {
+			self = .arityAny(function)
+		}
+
+		func call(poppingWith pop: () throws -> T, count: Int) rethrows -> T {
 			switch self {
 				case let .arityZero(function):
 					return function()
 				case let .arityOne(function):
 					return try function(pop())
 				case let .arityTwo(function):
-					let y = try pop()
-					let x = try pop()
+					let (y, x) = try (pop(), pop())
 					return function(x, y)
+				case let .arityAny(function):
+					var array = [T]()
+
+					for _ in 0..<count {
+						array.append(try pop())
+					}
+
+					return function(array)
 			}
 		}
 
@@ -428,11 +446,13 @@ private extension ExpressionEvaluator {
 						throw ExpressionEvaluatorError.unknownFunction(name)
 					}
 
-					guard try parseArgList() == function.numberOfArguments else {
-						throw ExpressionEvaluatorError.incorrectArgumentCount(name)
+					let argumentCount = try parseArgList()
+
+					guard  argumentCount == function.numberOfArguments || (function.numberOfArguments == nil && argumentCount > 0) else {
+						throw ExpressionEvaluatorError.incorrectArgumentCount(function: name, expectedCount: function.numberOfArguments)
 					}
 
-					try push(function.call(poppingWith: pop))
+					try push(function.call(poppingWith: pop, count: argumentCount))
 
 					getNextToken()
 				} else {
