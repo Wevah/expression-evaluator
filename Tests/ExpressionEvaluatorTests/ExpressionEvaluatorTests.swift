@@ -126,5 +126,12 @@ final class ExpressionEvaluatorTests: XCTestCase {
 
 		try XCTAssertEqual(evaluator.evaluate(expression: "addone(1)"), 2)
 	}
-	
+
+	func testClamp() {
+		let evaluator = ExpressionEvaluator<Double>()
+		try XCTAssertEqual(evaluator.evaluate(expression: "clamp(2, 1, 3)"), 2)
+		try XCTAssertEqual(evaluator.evaluate(expression: "clamp(-1, 1, 3)"), 1)
+		try XCTAssertEqual(evaluator.evaluate(expression: "clamp(4, 1, 3)"), 3)
+	}
+
 }

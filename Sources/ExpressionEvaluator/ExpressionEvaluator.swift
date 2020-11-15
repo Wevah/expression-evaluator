@@ -19,6 +19,10 @@ public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
 	/// A function was called with an incorrect argument count.
 	case incorrectArgumentCount(function: String, expectedCount: Int?)
 
+	/// An invalid argument was passed to a function,
+	/// for example swapping the last two arguments of "clamp".
+	case invalidArgument(function: String, message: String)
+
 	/// An identifier was not recognized.
 	case unknownIdentifier(_ identifier: String)
 
@@ -44,6 +48,8 @@ public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
 				} else {
 					return #"Incorrect number of arguments for function "\#(function)"; expects at least one argument."#
 				}
+			case let .invalidArgument(function, message):
+				return #"Error calling function "\#(function)": \#(message)"#
 			case let .unknownIdentifier(identifier):
 				return #"Unknown indentifier "\#(identifier)"."#
 			case let .unknownFunction(function):
@@ -369,7 +375,20 @@ public extension ExpressionEvaluator {
 			"cbrt": Function(T.cbrt),
 
 			"max": Function { $0.max() ?? 0 },
-			"min": Function { $0.min() ?? 0 }
+			"min": Function { $0.min() ?? 0 },
+
+			"clamp": Function {
+				if $1 > $2 {
+					throw ExpressionEvaluatorError.invalidArgument(function: "clamp", message: "Argument 2 must be less than argument 3.")
+				}
+				if $0 < $1 {
+					return $1
+				} else if $0 > $2 {
+					return $2
+				}
+
+				return $0
+			}
 		]
 	}
 
