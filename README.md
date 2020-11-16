@@ -2,7 +2,7 @@
 
 A simple mathematical expression evaluator for user input. Generic on `ExpressionEvaluable`, with conformances for `Double`, `Float`, `Float80`, and `CGFloat`.
 
-(Note: This is not meant to be a high-performance library.)
+(Note: This is not meant to be a high-performance library. It might also ditch the protocol in favor of `Real` from the Numerics package.)
 
 ## Examples
 
