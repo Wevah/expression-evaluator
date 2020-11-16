@@ -306,7 +306,7 @@ public extension ExpressionEvaluator {
 			self = .arityAny(function)
 		}
 
-		func call(poppingWith pop: () throws -> T, count: Int) throws -> T {
+		fileprivate func call(poppingWith pop: () throws -> T, count: Int) throws -> T {
 			switch self {
 				case let .arityZero(function):
 					return try function()
