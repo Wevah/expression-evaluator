@@ -34,7 +34,7 @@ let result = try evaluator.evaluate(expressions: expressions)
 
 Evaluate multiple *named* expressions:
 
-```
+```swift
 let expressions = ["add": "a + b", "mult": "a * b"]
 let variables = ["a": 2.0, "b": 3.0]
 let result = try ExpressionEvaluator.evaluate(expressions: expressions, variables: variables)
