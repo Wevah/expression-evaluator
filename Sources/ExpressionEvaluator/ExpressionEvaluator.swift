@@ -439,8 +439,6 @@ private extension ExpressionEvaluator {
 
 		expressionIndex = expression.unicodeScalars.index(after: firstIndex)
 
-		//gotToken = true
-
 		// FIXME: Make this better.
 		if alpha.contains(first) {
 			// Token is an identifier
