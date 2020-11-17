@@ -13,6 +13,9 @@ import Foundation
 
 public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
 
+	/// Attempted to add an element to the stack when it already has `maxStackDepth` values.
+	case stackOverflow(_ maxCount: Int)
+
 	/// `pop()` was called on an empty stack.
 	case zeroDepthPop
 
@@ -40,6 +43,8 @@ public enum ExpressionEvaluatorError: Error, CustomStringConvertible {
 
 	public var description: String {
 		switch self {
+			case let .stackOverflow(maxCount):
+				return "Stack overflow: max stack count is \(maxCount)"
 			case .zeroDepthPop:
 				return "Pop called on zero-depth stack."
 			case let .incorrectArgumentCount(function, expectedCount):
@@ -85,6 +90,8 @@ public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 
 	public private(set) lazy var constants = Self.defaultConstants
 	public private(set) lazy var functions = Self.defaultFunctions
+
+	public var maxStackCount = 100
 
 	/// Initializes an expression evaluator.
 	///
@@ -405,7 +412,11 @@ public extension ExpressionEvaluator {
 
 private extension ExpressionEvaluator {
 
-	func push(_ value: T) {
+	func push(_ value: T) throws {
+		guard stack.count < maxStackCount else {
+			throw ExpressionEvaluatorError.stackOverflow(maxStackCount)
+		}
+
 		stack.append(value)
 	}
 
@@ -490,7 +501,7 @@ private extension ExpressionEvaluator {
 
 		switch tokenType {
 			case .number:
-				push(T(token)!)
+				try push(T(token)!)
 				getNextToken()
 			case .identifier:
 				name = token
@@ -518,7 +529,7 @@ private extension ExpressionEvaluator {
 						throw ExpressionEvaluatorError.unknownIdentifier(name)
 					}
 
-					push(value)
+					try push(value)
 				}
 			default:
 				if !token.isEmpty {
@@ -563,7 +574,7 @@ private extension ExpressionEvaluator {
 			let b = try pop()
 			let a = try pop()
 
-			push(op == "*" ? a * b : a / b)
+			try push(op == "*" ? a * b : a / b)
 		}
 	}
 
@@ -579,7 +590,7 @@ private extension ExpressionEvaluator {
 			let b = try pop()
 			let a = try pop()
 
-			push(op == "+" ? a + b : a - b)
+			try push(op == "+" ? a + b : a - b)
 		}
 	}
 }
