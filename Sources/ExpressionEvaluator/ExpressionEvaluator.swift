@@ -283,6 +283,8 @@ public extension ExpressionEvaluator {
 		case arityThree((_ x: T, _ y: T, _ z: T) throws -> T)
 		case arityAny((_ values: [T]) throws -> T)
 
+		/// The number of arguments a the function accepts.
+		/// If `nil`, the function accepts one or more arguments.
 		public var argumentCount: Int? {
 			switch self {
 				case .arityZero:
