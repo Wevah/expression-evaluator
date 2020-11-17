@@ -86,6 +86,8 @@ public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 	private var stack = [T]()
 
 	/// The maximum stack depth.
+	///
+	/// Default is 100.
 	public var maxStackDepth = 100
 
 	private var token: String = ""
