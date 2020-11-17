@@ -342,7 +342,7 @@ public extension ExpressionEvaluator {
 					var array = [T]()
 
 					for _ in 0..<count {
-						array.append(try pop())
+						try array.insert(pop(), at: 0)
 					}
 
 					return try function(array)
