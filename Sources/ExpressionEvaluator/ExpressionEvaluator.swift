@@ -281,6 +281,7 @@ public extension ExpressionEvaluator {
 		case arityOne((_ x: T) throws -> T)
 		case arityTwo((_ x: T, _ y: T) throws -> T)
 		case arityThree((_ x: T, _ y: T, _ z: T) throws -> T)
+		case arityFour((_ x: T, _ y: T, _ z: T, _ w: T) throws -> T)
 		case arityAny((_ values: [T]) throws -> T)
 
 		/// The number of arguments a the function accepts.
@@ -295,6 +296,8 @@ public extension ExpressionEvaluator {
 					return 2
 				case .arityThree:
 					return 3
+				case .arityFour:
+					return 4
 				case .arityAny:
 					return nil
 			}
@@ -332,6 +335,9 @@ public extension ExpressionEvaluator {
 				case let .arityThree(function):
 					let (z, y, x) = try (pop(), pop(), pop())
 					return try function(x, y, z)
+				case let .arityFour(function):
+					let (w, z, y, x) = try (pop(), pop(), pop(), pop())
+					return try function(x, y, z, w)
 				case let .arityAny(function):
 					var array = [T]()
 
