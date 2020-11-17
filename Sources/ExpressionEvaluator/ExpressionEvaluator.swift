@@ -283,7 +283,7 @@ public extension ExpressionEvaluator {
 		case arityThree((_ x: T, _ y: T, _ z: T) throws -> T)
 		case arityAny((_ values: [T]) throws -> T)
 
-		public var numberOfArguments: Int? {
+		public var argumentCount: Int? {
 			switch self {
 				case .arityZero:
 					return 0
@@ -522,8 +522,8 @@ private extension ExpressionEvaluator {
 
 					let argumentCount = try parseArgList()
 
-					guard  argumentCount == function.numberOfArguments || (function.numberOfArguments == nil && argumentCount > 0) else {
-						throw ExpressionEvaluatorError.incorrectArgumentCount(function: name, expectedCount: function.numberOfArguments)
+					guard  argumentCount == function.argumentCount || (function.argumentCount == nil && argumentCount > 0) else {
+						throw ExpressionEvaluatorError.incorrectArgumentCount(function: name, expectedCount: function.argumentCount)
 					}
 
 					try push(function.call(poppingWith: pop, count: argumentCount))
