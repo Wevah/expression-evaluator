@@ -85,13 +85,18 @@ public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 	private lazy var expressionIndex: String.Index = expression.startIndex
 	private var stack = [T]()
 
+	/// The maximum stack depth.
+	public var maxStackDepth = 100
+
 	private var token: String = ""
 	private var tokenType: TokenType = .unknown
 
+	/// Defined constants.
 	public private(set) lazy var constants = Self.defaultConstants
+
+	/// Defined functions.
 	public private(set) lazy var functions = Self.defaultFunctions
 
-	public var maxStackCount = 100
 
 	/// Initializes an expression evaluator.
 	///
@@ -413,8 +418,8 @@ public extension ExpressionEvaluator {
 private extension ExpressionEvaluator {
 
 	func push(_ value: T) throws {
-		guard stack.count < maxStackCount else {
-			throw ExpressionEvaluatorError.stackOverflow(maxStackCount)
+		guard stack.count < maxStackDepth else {
+			throw ExpressionEvaluatorError.stackOverflow(maxStackDepth)
 		}
 
 		stack.append(value)
