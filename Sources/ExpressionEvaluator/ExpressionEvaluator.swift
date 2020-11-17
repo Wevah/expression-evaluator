@@ -99,7 +99,6 @@ public class ExpressionEvaluator<T> where T: ExpressionEvaluable {
 	/// Defined functions.
 	public private(set) lazy var functions = Self.defaultFunctions
 
-
 	/// Initializes an expression evaluator.
 	///
 	/// - Parameters:
