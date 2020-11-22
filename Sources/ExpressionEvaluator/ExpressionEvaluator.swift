@@ -278,11 +278,17 @@ public extension ExpressionEvaluator {
 	/// An ExpressionEvaluator function.
 	enum Function {
 
+		/// A function that takes zero arguments.
 		case arityZero(() throws -> T)
+		/// A function that takes one argument.
 		case arityOne((_ x: T) throws -> T)
+		/// A function that takes two arguments.
 		case arityTwo((_ x: T, _ y: T) throws -> T)
+		/// A function that takes three arguments.
 		case arityThree((_ x: T, _ y: T, _ z: T) throws -> T)
+		/// A function that takes four arguments.
 		case arityFour((_ x: T, _ y: T, _ z: T, _ w: T) throws -> T)
+		/// A function that takes one or more arguments.
 		case arityAny((_ values: [T]) throws -> T)
 
 		/// The number of arguments a the function accepts.
@@ -304,23 +310,55 @@ public extension ExpressionEvaluator {
 			}
 		}
 
-		public init(_ function: @escaping () throws -> T) {
+		/// Create a new callable function.
+		/// - Parameter function: The closure to run when calling the function.
+		fileprivate init(_ function: @escaping () throws -> T) {
 			self = .arityZero(function)
 		}
 
-		public init(_ function: @escaping (_ x: T) throws -> T) {
+		/// Create a new callable function.
+		/// - Parameters:
+		///   - function: The closure to run when calling the function.
+		///   - x: The argument to the function.
+		fileprivate init(_ function: @escaping (_ x: T) throws -> T) {
 			self = .arityOne(function)
 		}
 
-		public init(_ function: @escaping (_ x: T, _ y: T) throws -> T) {
+		/// Create a new callable function.
+		/// - Parameters:
+		///   - function: The closure to run when calling the function.
+		///   - x: The first argument to the function.
+		///   - y: The second argument to the function.
+		fileprivate init(_ function: @escaping (_ x: T, _ y: T) throws -> T) {
 			self = .arityTwo(function)
 		}
 
-		public init(_ function: @escaping (_ x: T, _ y: T, _ z: T) throws -> T) {
+		/// Create a new callable function.
+		/// - Parameters:
+		///   - function: The closure to run when calling the function.
+		///   - x: The first argument to the function.
+		///   - y: The second argument to the function.
+		///   - z: The third argument to the function.
+		fileprivate init(_ function: @escaping (_ x: T, _ y: T, _ z: T) throws -> T) {
 			self = .arityThree(function)
 		}
 
-		public init(_ function: @escaping (_ values: [T]) throws -> T) {
+		/// Create a new callable function.
+		/// - Parameters:
+		///   - function: The closure to run when calling the function.
+		///   - x: The first argument to the function.
+		///   - y: The second argument to the function.
+		///   - z: The third argument to the function.
+		///   - w: The fourth argument to the function.
+		fileprivate init(_ function: @escaping (_ x: T, _ y: T, _ z: T, _ w: T) throws -> T) {
+			self = .arityFour(function)
+		}
+
+		/// Create a new callable function.
+		/// - Parameters:
+		///   - function: The closure to run when calling the function.
+		///   - arguments: The arguments to the function.
+		fileprivate init(_ function: @escaping (_ values: [T]) throws -> T) {
 			self = .arityAny(function)
 		}
 
@@ -352,30 +390,72 @@ public extension ExpressionEvaluator {
 
 	}
 
+	/// Add a callable function.
+	/// - Parameters:
+	///   - function: The closure to run when the function is called.
+	///   - name: The name of the function.
 	func addFunction(_ function: @escaping () throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
+	/// Add a callable function.
+	/// - Parameters:
+	///   - function: The closure to run when the function is called.
+	///   - x: The function's argument.
+	///   - name: The name of the function.
 	func addFunction(_ function: @escaping (_ x: T) throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
+	/// Add a callable function.
+	/// - Parameters:
+	///   - function: The closure to run when the function is called.
+	///   - x: The function's first argument.
+	///   - y: The function's second argument.
+	///   - name: The name of the function.
 	func addFunction(_ function: @escaping (_ x: T, _ y: T) throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
+	/// Add a callable function.
+	/// - Parameters:
+	///   - function: The closure to run when the function is called.
+	///   - x: The function's first argument.
+	///   - y: The function's second argument.
+	///   - z: The function's third argument.
+	///   - name: The name of the function.
 	func addFunction(_ function: @escaping (_ x: T, _ y: T, _ z: T) throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
+	/// Add a callable function.
+	/// - Parameters:
+	///   - function: The closure to run when the function is called.
+	///   - x: The function's first argument.
+	///   - y: The function's second argument.
+	///   - z: The function's third argument.
+	///   - w: The function's fourth argument.
+	///   - name: The name of the function.
+	func addFunction(_ function: @escaping (_ x: T, _ y: T, _ z: T, _ w: T) throws -> T, withName name: String) {
+		functions[name] = Function(function)
+	}
+
+	/// Add a callable function.
+	/// - Parameters:
+	///   - function: The closure to run when the function is called.
+	///   - values: The function's arguments.
+	///   - name: The name of the function.
 	func addFunction(_ function: @escaping (_ values: [T]) throws -> T, withName name: String) {
 		functions[name] = Function(function)
 	}
 
+	/// Remove a callable function.
+	/// - Parameter name: The name of the function to remove.
 	func removeFunction(named name: String) {
 		functions[name] = nil
 	}
 
+	/// The default functions.
 	static var defaultFunctions: [String: Function] {
 		return [
 			"rand": Function { .random(in: 0..<1) },
@@ -413,6 +493,7 @@ public extension ExpressionEvaluator {
 		]
 	}
 
+	/// The default constants.
 	static var defaultConstants: [String: T] {
 		return [
 			"pi": .pi,
